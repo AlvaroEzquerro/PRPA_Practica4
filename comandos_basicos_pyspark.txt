@@ -1,0 +1,44 @@
+sc = SparkContext() <- Inicializar zona spark
+sc.stop() <- Finaliza zona spark
+
+	with SparkContext() as sc: <- Lo inicializa y cierra al final solo. Mejor para no generar problemas.
+		----
+		Codigo
+		----
+
+-------------------------------------------------------------------------
+
+CREAR RDDs:
+	
+datos = sc.textFile(nombre) <- Leer fichero de texto y lo divide por filas, devuelve un RDD (división en nodos del archivo para tratarlos por separado)
+	  = sc.emptyRDD() <- RDD vacio
+	  = sc.parallelize(objeto) <- RDD de un objeto
+	  = sc.union(rdd_list) <- Crea un RDD a partir de una lista de RDDs (CUIDADO, hay que usar .cache() en cada rdd antes de unirlos porque sino puede haber problemas con la  pereza)
+	  
+RDD.union(RDD1) <- Une RDD1 a RDD
+
+-------------------------------------------------------------------------
+
+FUNCIONES: (Key, Value) como en un diccionario.
+
+.map(funcion) <- Aplica funcion a todos los elementos de un RDD
+.sum() <- Suma todos los elementos de un RDD
+.filter(funcion)
+.take(n) <- Coge los n primeros elementos de un RDD
+.collect() <- Recoge todos los elementos de un RDD en un solo nodo (CUIDADO CON LA MEMORIA)
+.flatMap(funcion) <- Aplica .map(funcion) y luego lo une todo en una sola lista, cuando el resultado de funcion es una lista.
+			*! Cuidado, con un map, un dato de la rdd puede devolver None, ese valor es el resultado del map.
+			Con un flatMap, *no podemos devolver un None*, debemos devolver siempre un iterable (que va a recorrer para mezclar con el resto).
+			Otro detalle a tener en cuenta es que con el flatMap podemos usar yield (yield es como return pero genera un iterable perezoso)
+.count() <- Numero de elementos de un RDD
+.reduce(funcion) <- Fold de Haskell, pero funcion ha de ser conmutativa
+.reduceByKey(funcion) <- Hace un .reduce(funcion) con todos los elementos que comparten Key
+.countByValue(funcion) <- Devuelve un diccionario con tuplas (Key, numero de apariciones)
+.sortBy(funcion, ascending = False/True) <- Ordena dependiendo lo que devuelve funcion en cada elemento (ascending indica el orden: creciente o decreciente)
+.groupByKey() <- Agrupa todos los Values de tuplas que comparten Key, (Key, [Value1, ..., Valuek])
+.mapValues(funcion) <- Aplica .map(funcion) al Value (Value tiene que ser una 'lista')
+
+FUNCIONES INTERESANTES QUE NO PUEDO EXPLICAR:
+.aggregateByKey(valor_inicial)(añadir_elem, combinar_elems)
+-combineByKey()
+

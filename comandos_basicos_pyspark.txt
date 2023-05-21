@@ -5,6 +5,7 @@ sc.stop() <- Finaliza zona spark
 		----
 		Codigo
 		----
+sc.setLogLevel("ERROR")
 
 -------------------------------------------------------------------------
 

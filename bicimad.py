@@ -30,6 +30,7 @@ def mapper(line): #Funcion para extraer los datos de cada una de las lineas del 
     duration = data['travel_time']
     date = datetime.strptime(data["unplug_hourTime"]['$date'][:-4], '%Y-%m-%dT%H:%M:%S.000+')
     return user_type, user_day_code, start_station, end_station, duration, date, user_age
+    # No sería más comodo devolver esto como un diccionario o un objeto?
 '''
 Indices:
     0-user_type
@@ -90,6 +91,36 @@ def edades_ordenadas(rdd):
     edades = edades.map(lambda x: (x[0], x[1]*100/total)) #cambio el total por porcentajes
     return edades
 
+ # Usamos una tupla (inmutable) como llave
+def trayectos_habituales(rdd):
+    trayectos_ordenados = rdd.map(lambda x: (x[2],x[3]) ).\
+                              countByValue().\
+                              sortBy(lamda x: x[1] , ascending = False)
+    return trayectos_ordenados
+
+
+def to_listas(a):
+    return [(a,1)]
+
+def combinar_si_margen(listas, duracion, margen):
+    b = True; i = 0
+    while b and i < len(listas):
+        media, num = listas[i][0] 
+        if media - margen <= duracion <= media + margen:
+            listas[i] = ( (media*num + duracion)/(num+1) , num+1)   # Recalculamos la media
+            b = False
+        i += 1
+    if b: listas.append( (duracion, 1) )        # Si tarda mucho mas tiempo, lo consideramos a parte
+    return a
+
+def clientes_habituales(rdd, margen):
+    # Por anonimato, los IDs de cada persona solo duran un dia. Por eso, vamos a considerar a un cliente habitual si repite trayectos con el mismo horario y tienen mismo tipo
+    # La idea es agrupar los que compartan salida, destino, hora de salida y grupo de edad, después comparar que tienen un tiempo de trayecto similar dentro del margen
+    repeticiones_horario = rdd.map(lambda x: ((x[2],x[3], """x[horadesalida], """ x[6]) , x[4]) ).\
+                           aggregateByKey(to_listas, lambda a, b : combinar_si_margen(a,b,margen)).\
+                           flatMap(lambda x: x[1]).map(lambda x: x[1]).sort()
+    return repeticiones_horario                             # Devuelve el numero de veces que se ha repetido cada trayecto por una misma persona                                                             
+                                                             
 def main(dataset):
     with SparkContext() as sc:
         sc.setLogLevel("ERROR")

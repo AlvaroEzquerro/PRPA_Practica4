@@ -1,5 +1,6 @@
 from pyspark import SparkContext
 from datetime import datetime
+import sys
 import json #Sirve para leer el formato en el qeu estan las bases de datos
 
 
@@ -89,11 +90,11 @@ def edades_ordenadas(rdd):
     edades = edades.map(lambda x: (x[0], x[1]*100/total)) #cambio el total por porcentajes
     return edades
 
-def main():
+def main(dataset):
     with SparkContext() as sc:
         sc.setLogLevel("ERROR")
         
-        rdd_base = sc.textFile('sample_10e4.json') #Aqui leemos el archivo .json
+        rdd_base = sc.textFile(dataset) #Aqui leemos el archivo .json
         rdd = rdd_base.map(mapper) #Aplicamos la funcion anterior a todo el archivo
         n = 5
         
@@ -144,4 +145,6 @@ def main():
         
         
 if __name__ == '__main__':
-    main()
+    if len(sys.argv)>1:
+        dataset = sys.argv[1]
+    main(dataset)

@@ -95,7 +95,7 @@ def edades_ordenadas(rdd):
 def trayectos_habituales(rdd):
     trayectos_ordenados = rdd.map(lambda x: (x[2],x[3]) ).\
                               countByValue().\
-                              sortBy(lamda x: x[1] , ascending = False)
+                              sortBy(lambda x: x[1] , ascending = False)
     return trayectos_ordenados
 
 
@@ -116,7 +116,7 @@ def combinar_si_margen(listas, duracion, margen):
 def clientes_habituales(rdd, margen):
     # Por anonimato, los IDs de cada persona solo duran un dia. Por eso, vamos a considerar a un cliente habitual si repite trayectos con el mismo horario y tienen mismo tipo
     # La idea es agrupar los que compartan salida, destino, hora de salida y grupo de edad, después comparar que tienen un tiempo de trayecto similar dentro del margen
-    repeticiones_horario = rdd.map(lambda x: ((x[2],x[3], """x[horadesalida], """ x[6]) , x[4]) ).\
+    repeticiones_horario = rdd.map(lambda x: ((x[2],x[3], x[5].hour, x[6]) , x[4]) ).\
                            aggregateByKey(to_listas, lambda a, b : combinar_si_margen(a,b,margen)).\
                            flatMap(lambda x: x[1]).map(lambda x: x[1]).sort()
     return repeticiones_horario                             # Devuelve el numero de veces que se ha repetido cada trayecto por una misma persona                                                             
@@ -178,4 +178,5 @@ def main(dataset):
 if __name__ == '__main__':
     if len(sys.argv)>1:
         dataset = sys.argv[1]
-    main(dataset)
+    #main(dataset)
+    main('sample_10e2.json')

@@ -155,9 +155,9 @@ def main(dataset):
         
         horas = horas_ordenadas(rdd)
         print('Las horas ordenadas en cuanto a mayor uso son:')
-        print(horas.map(lambda x: x[0]).collect())
+        print(horas.map(lambda x: x[0]).take(n))
         print('con porcentajes:')
-        print(horas.map(lambda x: x[1]).collect())
+        print(horas.map(lambda x: x[1]).take(n))
         
         print('------------------------------4-------------------------------')
         
@@ -178,5 +178,5 @@ def main(dataset):
 if __name__ == '__main__':
     if len(sys.argv)>1:
         dataset = sys.argv[1]
-    #main(dataset)
-    main('sample_10e2.json')
+    main(dataset)
+    #main('sample_10e2.json')

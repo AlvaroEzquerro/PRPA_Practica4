@@ -28,7 +28,7 @@ def mapper(line): #Funcion para extraer los datos de cada una de las lineas del 
     start_station = data['idunplug_station']
     end_station = data['idplug_station']
     duration = data['travel_time']
-    date = datetime.strptime(data["unplug_hourTime"]['$date'][:-4], '%Y-%m-%dT%H:%M:%S.000+')
+    date = datetime.strptime(data["unplug_hourTime"], '%Y-%m-%dT%H:%M:%SZ')
     return user_type, user_day_code, start_station, end_station, duration, date, user_age
     # No sería más comodo devolver esto como un diccionario o un objeto?
 '''

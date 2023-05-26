@@ -79,6 +79,8 @@ def clientes_habituales(rdd, margen):
                            flatMap(lambda x: x[1]).map(lambda x: x[1]).sort()
     return repeticiones_horario# Devuelve el numero de veces que se ha repetido cada trayecto por una misma persona                                                             
 
+
+
 def pregunta1(rdd, n):
     
     def rutas_ordenadas(rdd):
@@ -117,6 +119,29 @@ def pregunta2(rdd, n):
     print(estacioneS.map(lambda x: x[0]).take(n))
     print('con este numero de usos cada una:')
     print(estacioneS.map(lambda x: x[1]).take(n))
+    
+def pregunta7(rdd, n):
+    # Diferencia de llegada vs salida de cada estación
+    def salidaVsEntrada(rdd):
+        dif_por_estacion =  rdd.filter(lambda x: x[2]!=x[3]).\
+                            flatMap(lambda x: [(x[2],-1),(x[3],1)]).\
+                            reduceByKey(lambda x,y : x+y).\
+                            sortBy(lambda x: x[1], ascending = False)
+        return dif_por_estacion
+    
+    print('------------------------------7-------------------------------')
+    
+    bicis = salidaVsEntrada(rdd)
+    print('Las estaciones con mayor superavit de bicicletas:')
+    print(bicis.map(lambda x: x[0]).take(n))
+    print('La cantidad de bicicletas que llegan superan a las que salen en:')
+    print(bicis.map(lambda x: x[1]).take(n))
+    
+    print('Las estaciones con mayor déficit de bicicletas:')
+    print(bicis.sortBy(lambda x: x[1], ascending = True).map(lambda x: x[0]).take(n))
+    print('La cantidad de bicicletas que llegan superan a las que salen en:')
+    print(bicis.sortBy(lambda x: x[1], ascending = True).map(lambda x: -x[1]).take(n))
+    
     
 def pregunta3(rdd, n):
     
@@ -195,6 +220,8 @@ def main(dataset):
         pregunta5(rdd, n)
         
         pregunta6(rdd, n)    
+        
+        pregunta7(rdd, n)
         
         
         

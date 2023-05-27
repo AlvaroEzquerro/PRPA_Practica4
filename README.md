@@ -12,9 +12,11 @@ La entrega consta principalmente de dos archivos:
 
 Nosotros nos hemos planteado intentar diseñar un plan de mejora para la eficiencia del servicio BiciMAD basándonos en algunas cuestiones de las cuales nos parece fundamental su estudio e intento de mejora. Estas cuestiones son:
 
-1. Los trayectos más realizados y los que menos.
-2. Optimizar las estaciones que hay, es decir, ver cuales son las menos utilizadas y las más. 
-3. Determinar la hora punta de uso.
-4. ¿Hay un gran número de clientes habituales, o sería recomendable plantear sistemas de fidelización para aumentar dicho número?
-5. Porcentajes de uso dependiendo del rango de edad y el tipo de usuario.
-6. Cantidad de bicicletas rotas, es decir, cuyo viaje consta de un tiempo bajo (<60 seg)
+Las cuestiones que nos hemos planteado son las siguientes:
+1. Determinar los trayectos más realizados y los menos.
+2. Calcular la cantidad de bicicletas rotas.
+3. Calcular cuáles son las estaciones más utilizadas y las que menos.
+4. Determinar la necesidad de transferencia de cada estación
+5. Estimar la hora punta de uso.
+6. Calcular los porcentajes de uso en función del rango de edad y el tipo de usuario.
+7. Intentar estimar el nmero de clientes habituales que tiene este servicio.

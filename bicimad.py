@@ -60,40 +60,6 @@ user_ages = {0: 'NaN',\
              5: '41-65',\
              6: '>65'}
 
-# Estimar el número de clientes en función del uso del servicio en horarios concretos
-def pregunta___(rdd, n):
-    
-    print('------------------------------______-------------------------------')
-    
-    def to_listas(a):
-        return [(a,1)]
-
-    def combinar_si_dentro_del_margen(listas, duracion, margen):
-        b = True; i = 0
-        while b and i < len(listas):
-            media, num = listas[i][0] 
-            if media - margen <= duracion <= media + margen:
-                listas[i] = ( (media*num + duracion)/(num+1) , num+1)   # Recalculamos la media
-                b = False
-            i += 1
-        if b: listas.append( (duracion, 1) )        # Si tarda mucho mas tiempo, lo consideramos a parte
-        return listas
-
-    def clientes_habituales(rdd, margen):
-        # Por anonimato, los IDs de cada persona solo duran un dia. Por eso, vamos a considerar a un cliente habitual si repite trayectos con el mismo horario y tienen mismo tipo
-        # La idea es agrupar los que compartan salida, destino, hora de salida y grupo de edad, después comparar que tienen un tiempo de trayecto similar dentro del margen
-        clientes_horario = rdd.map(lambda x: ((x[0],x[2],x[3], x[5].hour, x[6]) , x[4]) ).\
-                               aggregateByKey(to_listas, lambda a, b : combinar_si_dentro_del_margen(a,b,margen))
-        return clientes_horario    # Devuelve los trayectos repetidos a menudo en un horario en formato (key, [[(duracionMedia, numeoDeRepeticiones)]])                                                             
-    
-    clientes_horario = clientes_habituales(rdd,margen)
-    trayectos_ordenados = clientes_horario.flatMap(lambda x: [( (x[0][1],x[0][2]) ,elem) for elem in x[1] ] ).sortBy(lambda x: x[1][1], ascending = False)
-    print("Los trayectos más repetidos en los mismos horarios son:)
-    print( trayectos_ordenados.map(x[0]).take(n))
-    print("Han sido repetidos los siguientes numeros de veces cada uno:")
-    print(trayectos_ordenados.map(x[1]).take(n))
-    print("El numero de estos usuarios que tiene el abono anual es de:")
-    print(clientes_horario.filter(lambda x: x[0][0] == 1).map(lambda x: len(x[1]) ).reduce(lambda x, y : x+y) )
 
 def pregunta1(rdd, n):
     
@@ -103,7 +69,7 @@ def pregunta1(rdd, n):
             sortBy(lambda x: x[1], ascending = False)     
         return rutas_ordenadas
     
-    print('------------------------------1-------------------------------')
+    print('------------------------------1.1-------------------------------')
     
     rutas = rutas_ordenadas(rdd)
     print('Las', n, 'rutas mas repetidas son:')
@@ -117,20 +83,25 @@ def pregunta1(rdd, n):
             sortBy(lambda x: x[1], ascending = False)     
         return rutas_ordenadas
     
-    print('------------------------------1-------------------------------')
+    print('------------------------------1.2-------------------------------')
     
     rutas = rutas_ordenadas_no_triviales(rdd)
     print('Si descartamos los trayectos que corresponden a bicis defectuosas obtenemos los trayectos:')
     print(rutas.map(lambda x: x[0]).take(n))
     print('realizados cada uno este numero de veces:')
     print(rutas.map(lambda x: x[1]).take(n))
+
+    #ERROR:
+#  File "/home/alex/Escritorio/Practica4/bicimad.py", line 82, in <lambda>
+#  filter(lambda x : (x[0][0] != x[0][1]) or (x[4] > 60) ).countByKey().\
+#  IndexError: tuple index out of range
     
 
 def pregunta2(rdd, n):
 
     def bicis_rotas(rdd):
         total = rdd.count()
-        datos_rotas = rdd.filter(lambda x: (x[2]==x[3]) and (x[4]<60) )
+        datos_rotas = rdd.filter(lambda x: (x[2]==x[3]) and (x[4]<60))
         estaciones_rotas = datos_rotas.map(lambda x: x[2]).countByValue().\
                                         sortBy(lambda x: x[1],ascending = False)
         return datos_rotas.count(), total, round(rotas/total, 4), estaciones_rotas
@@ -146,6 +117,12 @@ def pregunta2(rdd, n):
     print(estaciones_rotas.map(lambda x: x[0]).take(n))
     print('realizadas cada una este numero de veces:')
     print(estaciones_rotas.map(lambda x: x[1]).take(n))
+
+    #ERROR:
+#File "/home/alex/Escritorio/Practica4/bicimad.py", line 105, in bicis_rotas
+#sortBy(lambda x: x[1],ascending = False)
+#AttributeError: 'collections.defaultdict' object has no attribute 'sortBy'
+
     
 def pregunta3(rdd, n):
     
@@ -243,28 +220,68 @@ def pregunta6(rdd, n):
     print('con porcentajes:')
     print(tipos.map(lambda x: round(x[1], 4)).collect())
     
+# Estimar el número de clientes en función del uso del servicio en horarios concretos
+def pregunta7(rdd, n):
+    
+    print('------------------------------7-------------------------------')
+    
+    def to_listas(a):
+        return [(a,1)]
 
+    def combinar_si_dentro_del_margen(listas, duracion, margen):
+        b = True; i = 0
+        while b and i < len(listas):
+            media, num = listas[i][0] 
+            if media - margen <= duracion <= media + margen:
+                listas[i] = ( (media*num + duracion)/(num+1) , num+1)   # Recalculamos la media
+                b = False
+            i += 1
+        if b: listas.append( (duracion, 1) )        # Si tarda mucho mas tiempo, lo consideramos a parte
+        return listas
+
+    def clientes_habituales(rdd, margen):
+        # Por anonimato, los IDs de cada persona solo duran un dia. Por eso, vamos a considerar a un cliente habitual si repite trayectos con el mismo horario y tienen mismo tipo
+        # La idea es agrupar los que compartan salida, destino, hora de salida y grupo de edad, después comparar que tienen un tiempo de trayecto similar dentro del margen
+        clientes_horario = rdd.map(lambda x: ((x[0],x[2],x[3], x[5].hour, x[6]) , x[4]) ).\
+                               aggregateByKey(to_listas, lambda a, b : combinar_si_dentro_del_margen(a,b,margen))
+        return clientes_horario    # Devuelve los trayectos repetidos a menudo en un horario en formato (key, [[(duracionMedia, numeoDeRepeticiones)]])                                                             
+    margen = 15
+    clientes_horario = clientes_habituales(rdd,margen)
+    trayectos_ordenados = clientes_horario.flatMap(lambda x: [( (x[0][1],x[0][2]) ,elem) for elem in x[1] ] ).sortBy(lambda x: x[1][1], ascending = False)
+    print("Los trayectos más repetidos en los mismos horarios son:")
+    print( trayectos_ordenados.map(x[0]).take(n))
+    print("Han sido repetidos los siguientes numeros de veces cada uno:")
+    print(trayectos_ordenados.map(x[1]).take(n))
+    print("El numero de estos usuarios que tiene el abono anual es de:")
+    print(clientes_horario.filter(lambda x: x[0][0] == 1).map(lambda x: len(x[1]) ).reduce(lambda x, y : x+y) )
+
+    #ERROR:
+#File "/home/alex/Escritorio/Practica4/bicimad.py", line 245, in clientes_habituales
+#aggregateByKey(to_listas, lambda a, b : combinar_si_dentro_del_margen(a,b,margen))
+#TypeError: RDD.aggregateByKey() missing 1 required positional argument: 'combFunc'
+
+    
 def main(dataset):
     with SparkContext() as sc:
         sc.setLogLevel("ERROR")
         
         rdd_base = sc.textFile(dataset) #Aqui leemos el archivo .json
         rdd = rdd_base.map(mapper) #Aplicamos la funcion anterior a todo el archivo
-        n = 5
+        n = 5 
         
         pregunta1(rdd, n)
         
         pregunta2(rdd, n)
         
         pregunta3(rdd, n)
+
+        pregunta4(rdd, n)
         
         pregunta5(rdd, n)
         
         pregunta6(rdd, n)    
         
-        #pregunta7(rdd, n)
-        
-        
+        pregunta7(rdd, n)
         
         
 if __name__ == '__main__':

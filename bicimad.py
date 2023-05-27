@@ -130,16 +130,22 @@ def pregunta2(rdd, n):
 
     def bicis_rotas(rdd):
         total = rdd.count()
-        rotas = rdd.filter(lambda x: x[4]<60).count()
-        return rotas, total, round(rotas/total, 4)
+        datos_rotas = rdd.filter(lambda x: (x[2]==x[3]) and (x[4]<60) )
+        estaciones_rotas = datos_rotas.map(lambda x: x[2]).countByValue().\
+                                        sortBy(lambda x: x[1],ascending = False)
+        return datos_rotas.count(), total, round(rotas/total, 4), estaciones_rotas
         
     print('------------------------------2-------------------------------')
     
-    rotas, total, porciento = bicis_rotas(rdd)
+    rotas, total, porciento, estaciones_rotas = bicis_rotas(rdd)
     print('Este es el número de veces que alguien ha cogido una bici rota:')
     print(rotas)
     print('de un total de viajes de:')
     print(total, '('+str(porciento),'%)')
+    print("Las estaciones con un mayor número de averías son")
+    print(estaciones_rotas.map(lambda x: x[0]).take(n))
+    print('realizadas cada una este numero de veces:')
+    print(estaciones_rotas.map(lambda x: x[1]).take(n))
     
 def pregunta3(rdd, n):
     

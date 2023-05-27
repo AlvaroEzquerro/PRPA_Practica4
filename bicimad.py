@@ -110,7 +110,7 @@ def pregunta1(rdd, n):
     print(rutas.map(lambda x: x[0]).take(n))
     print('realizadas cada una este numero de veces:')
     print(rutas.map(lambda x: x[1]).take(n))
- 
+
     def rutas_ordenadas_no_triviales(rdd):
         rutas_ordenadas = rdd.map(lambda x: ((x[2], x[3]), x[4])).\
             filter(lambda x : (x[0][0] != x[0][1]) or (x[4] > 60) ).countByKey().\
@@ -125,7 +125,23 @@ def pregunta1(rdd, n):
     print('realizados cada uno este numero de veces:')
     print(rutas.map(lambda x: x[1]).take(n))
     
+
 def pregunta2(rdd, n):
+
+    def bicis_rotas(rdd):
+        total = rdd.count()
+        rotas = rdd.filter(lambda x: x[4]<60).count()
+        return rotas, total, round(rotas/total, 4)
+        
+    print('------------------------------2-------------------------------')
+    
+    rotas, total, porciento = bicis_rotas(rdd)
+    print('Este es el número de veces que alguien ha cogido una bici rota:')
+    print(rotas)
+    print('de un total de viajes de:')
+    print(total, '('+str(porciento),'%)')
+    
+def pregunta3(rdd, n):
     
     def estaciones_ordenadas(rdd):
         Estaciones = rdd.flatMap(lambda x: [(x[2], 1), (x[3], 1)]).\
@@ -136,7 +152,7 @@ def pregunta2(rdd, n):
             sortBy(lambda x: x[1], ascending = True)
         return Estaciones, estacioneS
     
-    print('------------------------------2-------------------------------')
+    print('------------------------------3-------------------------------')
     
     Estaciones, estacioneS = estaciones_ordenadas(rdd)
     print('Estas son las', n, 'estaciones más transitadas:')
@@ -148,7 +164,7 @@ def pregunta2(rdd, n):
     print('con este numero de usos cada una:')
     print(estacioneS.map(lambda x: x[1]).take(n))
     
-def pregunta7(rdd, n):
+def pregunta4(rdd, n):
     # Diferencia de llegada vs salida de cada estación
     def salidaVsEntrada(rdd):
         dif_por_estacion =  rdd.filter(lambda x: (x[2]!=x[3]) and (x[0] != 3)).\
@@ -157,7 +173,7 @@ def pregunta7(rdd, n):
                             sortBy(lambda x: x[1], ascending = False)
         return dif_por_estacion
     
-    print('------------------------------7-------------------------------')
+    print('------------------------------4-------------------------------')
     
     bicis = salidaVsEntrada(rdd)
     print('Las estaciones con mayor superavit de bicicletas:')
@@ -171,7 +187,7 @@ def pregunta7(rdd, n):
     print(bicis.sortBy(lambda x: x[1], ascending = True).map(lambda x: -x[1]).take(n))
     
     
-def pregunta3(rdd, n):
+def pregunta5(rdd, n):
     
     def horas_ordenadas(rdd):
         horas = rdd.map(lambda x: (x[5].hour, 1)).\
@@ -181,7 +197,7 @@ def pregunta3(rdd, n):
         horas = horas.map(lambda x: (x[0], x[1]*100/total)) #cambio el total por porcentajes
         return horas
     
-    print('------------------------------3-------------------------------')
+    print('------------------------------5-------------------------------')
     
     horas = horas_ordenadas(rdd)
     print('Las horas ordenadas en cuanto a mayor uso son:')
@@ -189,7 +205,7 @@ def pregunta3(rdd, n):
     print('con porcentajes:')
     print(horas.map(lambda x: round(x[1], 4)).take(n))
 
-def pregunta5(rdd, n):
+def pregunta6(rdd, n):
     
     def edades_ordenadas(rdd):
         edades = rdd.map(lambda x: (user_ages[x[6]], 1)).\
@@ -207,7 +223,7 @@ def pregunta5(rdd, n):
         tipos = tipos.map(lambda x: (x[0], x[1]*100/total)) #cambio el total por porcentajes
         return tipos
     
-    print('------------------------------5-------------------------------')
+    print('------------------------------6-------------------------------')
     
     edades = edades_ordenadas(rdd)
     print('Las edades de los usuarios ordenadas en cuanto a más uso son:')
@@ -221,16 +237,7 @@ def pregunta5(rdd, n):
     print('con porcentajes:')
     print(tipos.map(lambda x: round(x[1], 4)).collect())
     
-def pregunta6(rdd, n):
-    print('------------------------------6-------------------------------')
-    
-    total = rdd.count()
-    rotas = rdd.filter(lambda x: x[4]<60).count()
-    print('Este es el número de veces que alguien ha cogido una bici rota:')
-    print(rotas)
-    print('de un total de viajes de:')
-    print(total, '('+str(round(rotas/total, 4)),'%)')                 
-                                           
+
 def main(dataset):
     with SparkContext() as sc:
         sc.setLogLevel("ERROR")
@@ -249,7 +256,7 @@ def main(dataset):
         
         pregunta6(rdd, n)    
         
-        pregunta7(rdd, n)
+        #pregunta7(rdd, n)
         
         
         
@@ -257,5 +264,5 @@ def main(dataset):
 if __name__ == '__main__':
     if len(sys.argv)>1:
         dataset = sys.argv[1]
-    #main(dataset)
-    main('202103_movements.json')
+    main(dataset)
+    #main('202103_movements.json')

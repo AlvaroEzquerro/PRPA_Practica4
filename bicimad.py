@@ -74,7 +74,7 @@ def pregunta1(rdd, n):
     def rutas_ordenadas_no_triviales(rdd):
         rutas_ordenadas = rdd.map(lambda x: ((x[2], x[3]), x[4])).\
             filter(lambda x : (x[0][0] != x[0][1]) or (x[1] > 180) ).\
-            map(lambda x: ((x[2], x[3]),1)).\
+            map(lambda x: (x[0],1)).\
             reduceByKey(lambda x, y: x+y).\
             sortBy(lambda x: x[1], ascending = False)     
         return rutas_ordenadas

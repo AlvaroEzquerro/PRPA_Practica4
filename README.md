@@ -4,35 +4,20 @@ Entrega de la Práctica 4 de la asignatura de Programación Paralela realizada p
 - Álvaro Ezquerro Pérez
 - Alejandro Millán Arribas
 
-La práctica consiste en el diseño e implementación de una solución a un problema de análisis de datos utlizando Spark sobre el dataset proporcionado por Ayuntamiento de Madrid del uso de sistema de bicicletas de préstamos BICIMAD. Nuestro objetivo es plantear diferentes cuestiones las cuales pretendemos resolver mediante el usa de las técnicas aprendidas en clase. 
+La práctica consiste en el diseño e implementación de una solución a un problema de análisis de datos utlizando Spark sobre el dataset proporcionado por Ayuntamiento de Madrid del uso de sistema de bicicletas de préstamos BICIMAD. 
 
-##Dataset
-El dataset sobre el que vamos a trabajar es el de BICIMAD. Todo lo referente a estos datos se puede encontrar en https://datos.madrid.es/portal/site/egob/menuitem.c05c1f754a33a9fbe4b2e4b284f1a5a0/?vgnextoid=d67921bb86e64610VgnVCM2000001f4a900aRCRD&vgnextchannel=374512b9ace9f310VgnVCM100000171f5a0aRCRD&vgnextfmt=default
+La entrega consta principalmente de dos archivos:
+- bicimad.py: donde hemos implementado la solución en Python, utilizando la herramienta Spark. Para ejecutar este archivo se debe incluir el archivo con los datos. Por ejemplo, python3 bicimad.py '202103_movements.json'.
+- BiciMAD.pdf: donde se encuentra una explicación extendida de la problemática planteada, así como la solución propuesta y el análisis de los resultados con las conclusiones correspondientes.
 
-Los archivos son formato json y son contienen los siguientes datos(Para una explicación más detallada ver Servicios-y-estructuras-Bicimad-V1-1.pdf):
+Nosotros nos hemos planteado intentar diseñar un plan de mejora para la eficiencia del servicio BiciMAD basándonos en algunas cuestiones de las cuales nos parece fundamental su estudio e intento de mejora. Estas cuestiones son:
 
-- Tipo de usuario: cliente o personal de mantenimiento.
-- Código de usuario.
-- Número de la estación donde se desengacha la bicicleta.
-- Número de la estación donde se enchancha la bicicleta.
-- Número de la base de la que se desengancha la bicicleta.
-- Número de la base en la que se engancha la bicicleta.
-- Tiempo transcurrido entre el enganche y el desenganche de la bicicleta.
-- Hora a la que se realiza el desenganche de la bicicleta. (formato: "2017-09-22T14:00:00.000+0200")
-- Rango de edad del usuario.
-- Tipo de usuario: trabajador de empresa, usuario anual y usuario ocasional.
+Las cuestiones que nos hemos planteado son las siguientes:
+1. Determinar los trayectos más realizados y los menos.
+2. Calcular la cantidad de bicicletas rotas.
+3. Calcular cuáles son las estaciones más utilizadas y las que menos.
+4. Determinar la necesidad de transferencia de cada estación
+5. Estimar la hora punta de uso.
+6. Calcular los porcentajes de uso en función del rango de edad y el tipo de usuario.
 
-
-A continuación, exponemos cada una de las problemáticas que nos hemos enfrentado y como hemos decidido abordarlas:
-
-## 1. Los trayectos más realizados y los que menos.
-
-## 2. Optimizar las estaciones que hay, es decir, ver cuales son las menos utilizadas y las más. 
-
-## 3. Determinar la hora punta de uso.
-
-## 4. ¿Hay un gran número de clientes habituales, o sería recomendable plantear sistemas de fidelización para aumentar dicho número?
-
-## 5. Porcentajes de uso dependiendo del rango de edad y el tipo de usuario.
-
-## 6. Cantidad de bicicletas rotas, es decir, cuyo viaje consta de un tiempo bajo (<60 seg)
+Los datos que hemos utilizado son los correspondientes a los meses de enero a junio de 2021 que se pueden encontrar en la página web del Ayuntamiento de Madrid, indicada en el archivo BiciMAD.pdf. Sin embargo, no hemos podido subirlos a este repositorio porque superaban la capacidad permitida por github.

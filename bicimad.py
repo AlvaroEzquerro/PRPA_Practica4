@@ -30,13 +30,7 @@ def mapper(line): #Funcion para extraer los datos de cada una de las lineas del 
     duration = data['travel_time']
     date = datetime.strptime(data["unplug_hourTime"], '%Y-%m-%dT%H:%M:%SZ')
     return user_type, user_day_code, start_station, end_station, duration, date, user_age
-    # No sería más comodo devolver esto como un diccionario o un objeto?
-    
-    # Alvaro:
-    # Piensa que se hace .map(mapper), entonces por cada dato creariamos un dict
-    
-    # Pepe:
-    # Por cada dato ya estas creando una lista XD estas usando la misma cantidad de datos al final, pero quedaria mas legible
+
 
     '''
 Indices:
@@ -232,5 +226,4 @@ def main(dataset):
 if __name__ == '__main__':
     if len(sys.argv)>1:
         dataset = sys.argv[1]
-    #main(dataset)
-    main('202103_movements.json')
+    main(dataset)

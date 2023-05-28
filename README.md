@@ -19,3 +19,5 @@ Las cuestiones que nos hemos planteado son las siguientes:
 4. Determinar la necesidad de transferencia de cada estación
 5. Estimar la hora punta de uso.
 6. Calcular los porcentajes de uso en función del rango de edad y el tipo de usuario.
+
+Los datos que hemos utilizado son los correspondientes a los meses de enero a junio de 2021 que se pueden encontrar en la página web del Ayuntamiento de Madrid, indicada en el archivo BiciMAD.pdf. Sin embargo, no hemos podido subirlos a este repositorio porque superaban la capacidad permitida por github.

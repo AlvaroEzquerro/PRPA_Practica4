@@ -90,7 +90,7 @@ def pregunta1(rdd, n):
 def pregunta2(rdd, n):
     def bicis_rotas(rdd):
         total = rdd.count()
-        datos_rotas = rdd.filter(lambda x: (x[2]==x[3]) and (x[4]<60))
+        datos_rotas = rdd.filter(lambda x: (x[2]==x[3]) and (x[4]<180))
         estaciones_rotas = datos_rotas.map(lambda x: (x[2], 1)).\
             reduceByKey(lambda x, y: x+y).sortBy(lambda x: x[1], ascending = False)
         rotas = datos_rotas.count()

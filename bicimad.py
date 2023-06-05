@@ -207,7 +207,10 @@ def main(dataset):
     with SparkContext() as sc:
         sc.setLogLevel("ERROR")
         
-        rdd_base = sc.textFile(dataset) #Aqui leemos el archivo .json
+        rdd_base = sc.emptyRDD()
+        for data in dataset:
+            rdd_aux = sc.textFile(data)
+            rdd_base = rdd_base.union(rdd_aux)
         rdd = rdd_base.map(mapper) #Aplicamos la funcion anterior a todo el archivo
         n = 5 
         
@@ -226,5 +229,7 @@ def main(dataset):
         
 if __name__ == '__main__':
     if len(sys.argv)>1:
-        dataset = sys.argv[1]
+        dataset = []
+        for i in range(1, len(sys.argv)):
+            dataset.append(sys.argv[i])
     main(dataset)

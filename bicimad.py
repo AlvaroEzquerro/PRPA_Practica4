@@ -229,7 +229,7 @@ def main(dataset):
         
 if __name__ == '__main__':
     if len(sys.argv)>1:
-        dataset = []
-        for i in range(1, len(sys.argv)):
-            dataset.append(sys.argv[i])
+        dataset = sys.argv[1:]
+    else:
+        print("Hace falta añadir el nombre del fichero o ficheros sobre los cuales se quiere realizar el estudio")
     main(dataset)

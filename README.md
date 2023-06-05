@@ -12,7 +12,10 @@ La entrega consta principalmente de dos archivos:
 
 ## EJECUCIÓN
 Para ejecutar el programa bicimad.py sobre los archivos que se deseen hay que utilizar el comando:
+
 python3 bicimad.py 'archivo1.json' 'archivo2.json' ... 'archivon.json'
+
+
 Nosotros nos hemos planteado intentar diseñar un plan de mejora para la eficiencia del servicio BiciMAD basándonos en algunas cuestiones de las cuales nos parece fundamental su estudio e intento de mejora. Estas cuestiones son:
 
 Las cuestiones que nos hemos planteado son las siguientes:

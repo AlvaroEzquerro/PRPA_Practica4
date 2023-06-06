@@ -9,6 +9,7 @@ La práctica consiste en el diseño e implementación de una solución a un prob
 La entrega consta principalmente de dos archivos:
 - bicimad.py: donde hemos implementado la solución en Python, utilizando la herramienta Spark.
 - BiciMAD.pdf: donde se encuentra una explicación extendida de la problemática planteada, así como la solución propuesta y el análisis de los resultados con las conclusiones correspondientes.
+- EjecucionesCluster.png: se encuentra el registro de varias ejecuciones en el cluster cada una de ellas sobre un distinto número de archvivos.
 
 ## EJECUCIÓN
 Para ejecutar el programa bicimad.py sobre los archivos que se deseen hay que utilizar el comando:
